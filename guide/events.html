@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>6 Events API 1.0.M1</title>
+    <title>5 Events Bus API 1.0.M2</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,22 +30,22 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/gettingStarted.html"><strong>2</strong><span>Getting Started</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/uiextension.html"><strong>3</strong><span>UI Extensions</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/configuration.html"><strong>3</strong><span>Configuration API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/configuration.html"><strong>4</strong><span>Configuration API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/security.html"><strong>4</strong><span>Security API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/security.html"><strong>5</strong><span>Security API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/events.html"><strong>5</strong><span>Events Bus API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/events.html"><strong>6</strong><span>Events API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/injection.html"><strong>6</strong><span>Injection API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/injection.html"><strong>7</strong><span>Injection API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/navigation.html"><strong>7</strong><span>Navigation API</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/navigation.html"><strong>8</strong><span>Navigation API</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/uiextension.html"><strong>8</strong><span>UI Extensions</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../guide/convention.html"><strong>9</strong><span>Convention API</span></a>
@@ -74,39 +74,300 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../guide/security.html">&lt;&lt; <strong>5</strong><span>Security API</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/security.html">&lt;&lt; <strong>4</strong><span>Security API</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
                 
-                    <div class="toc-item next-right"><a href="../guide/injection.html"><strong>7</strong><span>Injection API</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/injection.html"><strong>6</strong><span>Injection API</span> >></a></div>
                 
 
 
                 <div class="project">
-                    <h1>6 Events API - Reference Documentation</h1>
+                    <h1>5 Events Bus API - Reference Documentation</h1>
 
                     <p><strong>Authors:</strong> Marc Palmer (marc@grailsrocks.com), Stéphane Maldini (stephane.maldini@gmail.com)</p>
 
-                    <p><strong>Version:</strong> 1.0.M1</p>
+                    <p><strong>Version:</strong> 1.0.M2</p>
 
                     
                 </div>
 
                 
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#sending"><strong>5.1</strong><span>Sending Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#listening"><strong>5.2</strong><span>Listening Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#replying"><strong>5.3</strong><span>Replying from Listeners</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#artifact"><strong>5.4</strong><span>Listeners configuration -- The XxxEvents Artifact</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#gorm"><strong>5.5</strong><span>Listening GORM events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#beans"><strong>5.6</strong><span>Spring Beans</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#secure"><strong>5.7</strong><span>Securing events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#extensions"><strong>5.8</strong><span>Extensions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#config"><strong>5.9</strong><span>Configuration properties</span></a>
+                    </div>
+                    
+                </div>
+                
 
                 
 
-<h1 id="events">6 Events API</h1>
-Pending
+<h1 id="events">5 Events Bus API</h1>
+An event is often as simple as a "callback" with no parameters, but usually there is some extra state passed as an event object.
+An event can be sent to multiple listeners, and any result returned from any listeners is passed back to the original sender of the event.
+An event belongs to a "topic" and often has a "subject". The topic is like a channel that identifies the kind of events. The optional subject is the object that the event "happened to".
+So for example a simple "app started" notification has no subject but may have topic "grails", but a "user logged in" even may have topic "security" and subject set to the user principal supplied by the security plugin you are using.<p class="paragraph"/>With Platform-Core plugin we have implemented a couple of features and artifacts to let you simply manage an  <em class="italic">event bus</em> 
+and get maximum flexibility when required :
+<ul class="star">
+<li>Sending <strong class="bold">Events methods</strong> injected in your <strong class="bold">Domains</strong>, <strong class="bold">Controllers</strong> and <strong class="bold">Services</strong></li>
+<li><strong class="bold">@Listener</strong> annotations for your <strong class="bold">Services</strong> methods.</li>
+<li>Events mapping <strong class="bold">DSL artifact</strong> to select and control events topics</li>
+<li><strong class="bold">Spring beans</strong> with access to underlying API</li>
+<li><strong class="bold">More cool stuff</strong> with <a href="../ref/Httpsgithubcomsmaldinigrailseventssi/Events Spring Integration.html" class="https://github.com/smaldini/grails-events-si">Events Spring Integration</a> and <a href="../ref/Httpsgithubcomsmaldinigrailseventspush/Events Push.html" class="https://github.com/smaldini/grails-events-push">Events Push</a></li>
+<li>Simple <strong class="bold">config keys</strong></li>
+</ul><p class="paragraph"/>In a nutshell, you will :
+<ul class="star">
+<li>send events :</li>
+</ul><p class="paragraph"/><div class="code"><pre>class UserController&#123;<p class="paragraph"/>   def registration()&#123;
+         def user = <span class="java&#45;keyword">new</span> User(params).save()
+         <span class="java&#45;keyword">if</span>(user)&#123;
+            //non&#45;blocking call, will trigger application listeners <span class="java&#45;keyword">for</span> <span class="java&#45;keyword">this</span> topic
+            eventAsync('mailRegistration', user)<p class="paragraph"/>            //can also be written like that
+            //eventAsync topic:'mailRegistration', data:user<p class="paragraph"/>            render(view:'sendingRegistrationMail')
+         &#125;<span class="java&#45;keyword">else</span>&#123;
+            render(view:'errorRegistration')
+         &#125;
+  &#125;
+&#125;</pre></div>
+<ul class="star">
+<li>write a listener (or event handler, or event reactor or whatever you call it):</li>
+</ul><p class="paragraph"/><div class="code"><pre>class UserService&#123;<p class="paragraph"/>   //use method name 'mailRegistration' as topic name
+   @grails.events.Listener
+   //can also use custom topic name using topic arg: @Listener(topic='test')
+   def mailRegistration(User user)&#123;
+         sendMail&#123;
+            to user.mail
+            subject <span class="java&#45;quote">"Confirmation"</span>
+            html g.render(template:<span class="java&#45;quote">"userMailConfirmation"</span>)
+        &#125;
+  &#125;
+&#125;</pre></div>
+
+
+
+<h2 id="sending">5.1 Sending Events</h2>
+Sending an event is simple. We've defined 3 different methods :
+<ul class="star">
+<li><strong class="bold">event</strong>(topic, &#91;data, params&#93;) : Synchronous event</li>
+<li><strong class="bold">eventAsync</strong>(topic, &#91;data, params&#93;) : Asynchronous event</li>
+<li><strong class="bold">eventAsync</strong>(topic, &#91;data, params,&#93; callbackClosure) : Asynchronous event with a closure completion callback</li>
+</ul><p class="paragraph"/>In addition we support the map notation :
+event&#91;Async&#93;(Map args &#91;callbackClosure&#93;)<p class="paragraph"/>Let's dig into the methods signatures details :
+<ul class="star">
+<li>Topic argument is a <strong class="bold">String</strong> which represents channel subscribed by listeners.</li>
+<li> <em class="italic">optionnal</em>  Data argument is an <strong class="bold">Object</strong> - <em class="italic">preferrably Serializable for IO facilities</em> - which represents the subject of your event such as a domain class.</li>
+<li> <em class="italic">optionnal</em>  Params argument is a <strong class="bold">Map</strong> which represents sending behaviors including <strong class="bold">namespace</strong>.</li>
+<ul class="star">
+<li><strong class="bold">String</strong> namespace - default <strong class="bold">"app"</strong> when method is triggered from a grails app. We will details further the namespacing consequences in the Listeners documentation.</li>
+<li><strong class="bold">Boolean</strong> gormSession - default <strong class="bold">true</strong> : When used asynchronously, it may be useful to enable/disable GORM session context. We automatically take care of creating, maintaining, flushing and destroying a GORM session.</li>
+</ul>
+<li>callbackClosure is a <strong class="bold">Closure</strong> triggered after an async event completion.</li>
+<li>The map notation supports the following arguments : <strong class="bold">topic</strong>, <strong class="bold">for</strong> (shortcut for 'namespace') and <strong class="bold">data</strong>.</li>
+<li>Returns an <strong class="bold">EventReply</strong> object.</li>
+</ul><p class="paragraph"/><strong class="bold">EventReply</strong> implements Future&#60;Object&#62; and provides 3 usefuls methods :
+<ul class="star">
+<li><strong class="bold">List&#60;Object&#62; getValues()</strong> : Return as many values as listeners has replied.</li>
+<li><strong class="bold">Object getValue()</strong> : Return the first element of getValues().</li>
+<li><strong class="bold">int size()</strong> : Return the replies count.</li>
+</ul><p class="paragraph"/><h3>Sync events</h3>
+Synchronous events can be sent from domains, services and controllers artefacts by using  <em class="italic">EventReply event(String topic, Object data)</em>  :<p class="paragraph"/><div class="code"><pre>class SomeController&#123;<p class="paragraph"/>   def logout()&#123;
+      def reply = event(<span class="java&#45;quote">"logout"</span>, session.user)
+      //wait <span class="java&#45;keyword">for</span> reply
+      render reply.value  //display value
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h3>Async events</h3>
+Asynchronous events can be sent from domains, services and controllers artefacts by using  <em class="italic">EventReply eventAsync(String topic, Object data)</em>  :<p class="paragraph"/><div class="code"><pre>class SomeController&#123;<p class="paragraph"/>   def logout()&#123;
+      def reply = eventAsync('logout', session.user)
+      //doesn't wait <span class="java&#45;keyword">for</span> reply
+      render reply.value //block the thread until event response and display value
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h3>Assign a namespace</h3>
+All the listeners get a property called namespace which prevents topic naming collisions and undesired events. By default, they are all assigned to <strong class="bold">app</strong>.
+ This is the same default used when you send an event, but what if you want to reach others namespaced listeners, like 'browser' ones if you use Events-Push plugin ? Simply use <strong class="bold">namespace</strong> argument within params or use <strong class="bold">for</strong> if you stick with Map notation.<p class="paragraph"/><div class="code"><pre>class SomeController&#123;<p class="paragraph"/>    def logout()&#123;
+    //In <span class="java&#45;keyword">this</span> example we use the Map form, pay attention to the namespace argument identified by the '<span class="java&#45;keyword">for</span>' key
+       eventAsync <span class="java&#45;keyword">for</span>:'browser', topic:'logout', data:session.user
+       ....
+    &#125;
+ &#125;</pre></div>
+
+
+<h2 id="listening">5.2 Listening Events</h2>
+Listening for events simply requires registering the method that should receive the event notifications.<p class="paragraph"/>There are few ways to register events.<p class="paragraph"/><h3>Defining listeners at compile time</h3><p class="paragraph"/>Within Grails services you can use the <strong class="bold">@Listener</strong> annotation. This takes a <strong class="bold">topic</strong> string, but you can omit it and use the <strong class="bold">method name</strong> as the topic to listen for:<p class="paragraph"/><div class="code"><pre>class SomeService&#123;
+   @grails.events.Listener(topic = 'userLogged')
+   def myMethod(User user)&#123;
+   &#125;<p class="paragraph"/>   @grails.events.Listener //use 'mailSent' as topic name
+   def mailSent(User user)&#123;
+  &#125;
+&#125;</pre></div><p class="paragraph"/>Event methods are <strong class="bold">always single-argument</strong>, and the value is the object sent with the event. Usually this is the "subject" of the event.<p class="paragraph"/><h3>Namespacing</h3><p class="paragraph"/>Your declared events belongs to the <strong class="bold">app</strong> namespace, unless you tune it using the <strong class="bold">namespace</strong> argument or the Events DSL we will introduce later.<p class="paragraph"/>
+<div class="code"><pre>class SomeService&#123;
+   @grails.events.Listener(topic = 'userLogged', namespace = 'security')
+   def myMethod(User user)&#123;
+   &#125;<p class="paragraph"/>   @grails.events.Listener(namespace = 'gorm') //will assign <span class="java&#45;keyword">this</span> method to topic 'afterInsert' on namespace 'gorm'
+   def afterInsert(User user)&#123;
+  &#125;
+&#125;</pre></div><p class="paragraph"/>Remember that you will need to specify the scope when triggering events if you customize it with a different value than <strong class="bold">app</strong> :<p class="paragraph"/><div class="code"><pre>class SomeController&#123;
+   def myAction()&#123;
+        event <span class="java&#45;keyword">for</span>:'security', topic:'userLogged', data:session.user
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h3>Dynamic listeners</h3><p class="paragraph"/>Some edge cases need runtime registration. If you meet this use case, use the injected <a href="../ref/Events Methods/on.html" class="Events Methods">on</a> method :<p class="paragraph"/><div class="code"><pre>class SomeController&#123;<p class="paragraph"/> def testInlineListener = &#123;
+        //register with 'logout' topic on 'app' <span class="java&#45;keyword">default</span> namespace
+        def listener = on(<span class="java&#45;quote">"logout"</span>) &#123;User user &#45;&#62;
+            println <span class="java&#45;quote">"test $user"</span>
+        &#125;
+        render <span class="java&#45;quote">"$listener registered"</span>
+ &#125;<p class="paragraph"/> def testInlineListener2 = &#123;
+          //register a 'gorm' namespaced handler on 'afterInsert' topic.
+          def listener = on(<span class="java&#45;quote">"gorm"</span>, <span class="java&#45;quote">"afterInsert"</span>) &#123;Book book &#45;&#62;
+              println <span class="java&#45;quote">"test $book"</span>
+          &#125;
+          render <span class="java&#45;quote">"$listener registered"</span>
+ &#125;
+&#125;</pre></div>
+
+
+<h2 id="replying">5.3 Replying from Listeners</h2>
+Usually, an event is  <em class="italic">fired and forgot</em> . In some cases, you may expect an answer to transform your messaging architecture
+into a controlled flow. For instance, a negative reply can be used in GORM events to cancel database writing for the current subjet.
+Another usual example is the aggregation of multiple workers products.<p class="paragraph"/><h3>Simple reply</h3><p class="paragraph"/>Replying is a simple matter of returning an object from the listener method :<p class="paragraph"/><div class="code"><pre>class SomeService&#123;
+    @Listener
+    def logout(User user)&#123;
+       Date disconnectDate = <span class="java&#45;keyword">new</span> Date()<p class="paragraph"/>       //<span class="java&#45;keyword">do</span> something with user<p class="paragraph"/>       <span class="java&#45;keyword">return</span> disconnectDate
+    &#125;
+&#125;</pre></div><p class="paragraph"/>Whenever a listener return non null object, the caller can access it through the EventReply enveloppe returned immediatly
+after calling event/eventAsync. Getting the value is a blocking operation called <strong class="bold">value</strong> :<p class="paragraph"/><div class="code"><pre>class SomeController&#123;<p class="paragraph"/>   def logout()&#123;
+       def reply = eventAsync topic:<span class="java&#45;quote">"logout"</span>, data:session.user<p class="paragraph"/>       render reply.value //wait and display value<p class="paragraph"/>       def reply2 = eventAsync topic:<span class="java&#45;quote">"logout"</span>, data:session.user<p class="paragraph"/>       render reply.get(30, TimeUnit.SECONDS) //EventReply object is a Future implementation, hence providing the same facilities such as timeout
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h3>Multiple replies</h3><p class="paragraph"/>Multiple listeners can return values for the same topic/namespace. In this case, EventReply will wait for all handlers before returning any value.
+Remember that a valid result is a non null value, hence why even if 3 handlers have reacted but only 2 did return something, then you will only
+see 2 values in the <strong class="bold">EventReply.values</strong>.<p class="paragraph"/><div class="code"><pre>class SomeController&#123;<p class="paragraph"/>   def logout()&#123;
+       def reply = event topic:<span class="java&#45;quote">"sendMails"</span>, data:session.user<p class="paragraph"/>       render reply.value //wait <span class="java&#45;keyword">for</span> all listeners and then display the first value from the aggregated results
+       render reply.values //display all results as List
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h3>Waiting replies</h3><p class="paragraph"/>In domains, services and controllers artefacts you can wait for events using "EventReply waitFor(EventReply&#8230; eventReplies)".
+It accepts as many events replies you want and returns the same array for functiunal programming style. This method is rather useless in a sync scenario.<p class="paragraph"/><div class="code"><pre>class SomeController&#123;<p class="paragraph"/>   def logout()&#123;
+      def reply = eventAsync('logout', session.user)
+      def reply2 = eventAsync('logout', session.user)
+      def reply3 = eventAsync('logout', session.user)<p class="paragraph"/>      waitFor(reply,reply2,reply3).each&#123;EventReply reply&#45;&#62;
+        render reply.value +'&#60;/br&#62;'
+      &#125;<p class="paragraph"/>      //same with 20 seconds timeout on each reply
+      waitFor(20, TimeUnit.SECONDS, reply,reply2,reply3).each&#123;EventReply reply&#45;&#62;
+              render reply.value +'&#60;/br&#62;'
+      &#125;
+   &#125;
+&#125;</pre></div>
+
+
+<h2 id="artifact">5.4 Listeners configuration -- The XxxEvents Artifact</h2>
+Listening for events simply requires registering the method that should receive the event notifications.<p class="paragraph"/>There are a few ways to register events.<p class="paragraph"/><h3>Defining listeners at compile time</h3><p class="paragraph"/>Within Grails services you can use the @Listener annotation. This takes a topic string, but if you omit this string it will use the method name as the topic to listen for:<p class="paragraph"/><div class="code"><pre>class SomeService&#123;
+   @grails.events.Listener('userLogged')
+   def myMethod(User user)&#123;
+      //<span class="java&#45;keyword">do</span> something with user
+   &#125;<p class="paragraph"/>   @grails.events.Listener
+   def mailSent(User user)&#123; //use 'mailSent' as topic name
+         //<span class="java&#45;keyword">do</span> something with user
+  &#125;
+&#125;</pre></div><p class="paragraph"/>Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.<p class="paragraph"/><h3>Defining listeners at run time</h3><p class="paragraph"/>
+
+
+
+<h2 id="gorm">5.5 Listening GORM events</h2>
+Listening for events simply requires registering the method that should receive the event notifications.<p class="paragraph"/>There are a few ways to register events.<p class="paragraph"/><h3>Defining listeners at compile time</h3><p class="paragraph"/>Within Grails services you can use the @Listener annotation. This takes a topic string, but if you omit this string it will use the method name as the topic to listen for:<p class="paragraph"/><div class="code"><pre>class SomeService&#123;
+   @grails.events.Listener('userLogged')
+   def myMethod(User user)&#123;
+      //<span class="java&#45;keyword">do</span> something with user
+   &#125;<p class="paragraph"/>   @grails.events.Listener
+   def mailSent(User user)&#123; //use 'mailSent' as topic name
+         //<span class="java&#45;keyword">do</span> something with user
+  &#125;
+&#125;</pre></div><p class="paragraph"/>Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.<p class="paragraph"/><h3>Defining listeners at run time</h3><p class="paragraph"/>
+
+
+
+<h2 id="beans">5.6 Spring Beans</h2>
+Listening for events simply requires registering the method that should receive the event notifications.<p class="paragraph"/>There are a few ways to register events.<p class="paragraph"/><h3>Defining listeners at compile time</h3><p class="paragraph"/>Within Grails services you can use the @Listener annotation. This takes a topic string, but if you omit this string it will use the method name as the topic to listen for:<p class="paragraph"/><div class="code"><pre>class SomeService&#123;
+   @grails.events.Listener('userLogged')
+   def myMethod(User user)&#123;
+      //<span class="java&#45;keyword">do</span> something with user
+   &#125;<p class="paragraph"/>   @grails.events.Listener
+   def mailSent(User user)&#123; //use 'mailSent' as topic name
+         //<span class="java&#45;keyword">do</span> something with user
+  &#125;
+&#125;</pre></div><p class="paragraph"/>Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.<p class="paragraph"/><h3>Defining listeners at run time</h3><p class="paragraph"/>
+
+
+
+<h2 id="secure">5.7 Securing events</h2>
+Listening for events simply requires registering the method that should receive the event notifications.<p class="paragraph"/>There are a few ways to register events.<p class="paragraph"/><h3>Defining listeners at compile time</h3><p class="paragraph"/>Within Grails services you can use the @Listener annotation. This takes a topic string, but if you omit this string it will use the method name as the topic to listen for:<p class="paragraph"/><div class="code"><pre>class SomeService&#123;
+   @grails.events.Listener('userLogged')
+   def myMethod(User user)&#123;
+      //<span class="java&#45;keyword">do</span> something with user
+   &#125;<p class="paragraph"/>   @grails.events.Listener
+   def mailSent(User user)&#123; //use 'mailSent' as topic name
+         //<span class="java&#45;keyword">do</span> something with user
+  &#125;
+&#125;</pre></div><p class="paragraph"/>Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.<p class="paragraph"/><h3>Defining listeners at run time</h3><p class="paragraph"/>
+
+
+
+<h2 id="extensions">5.8 Extensions</h2>
+Listening for events simply requires registering the method that should receive the event notifications.<p class="paragraph"/>There are a few ways to register events.<p class="paragraph"/><h3>Defining listeners at compile time</h3><p class="paragraph"/>Within Grails services you can use the @Listener annotation. This takes a topic string, but if you omit this string it will use the method name as the topic to listen for:<p class="paragraph"/><div class="code"><pre>class SomeService&#123;
+   @grails.events.Listener('userLogged')
+   def myMethod(User user)&#123;
+      //<span class="java&#45;keyword">do</span> something with user
+   &#125;<p class="paragraph"/>   @grails.events.Listener
+   def mailSent(User user)&#123; //use 'mailSent' as topic name
+         //<span class="java&#45;keyword">do</span> something with user
+  &#125;
+&#125;</pre></div><p class="paragraph"/>Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.<p class="paragraph"/><h3>Defining listeners at run time</h3><p class="paragraph"/>
+
+
+
+<h2 id="config">5.9 Configuration properties</h2>
+Listening for events simply requires registering the method that should receive the event notifications.<p class="paragraph"/>There are a few ways to register events.<p class="paragraph"/><h3>Defining listeners at compile time</h3><p class="paragraph"/>Within Grails services you can use the @Listener annotation. This takes a topic string, but if you omit this string it will use the method name as the topic to listen for:<p class="paragraph"/><div class="code"><pre>class SomeService&#123;
+   @grails.events.Listener('userLogged')
+   def myMethod(User user)&#123;
+      //<span class="java&#45;keyword">do</span> something with user
+   &#125;<p class="paragraph"/>   @grails.events.Listener
+   def mailSent(User user)&#123; //use 'mailSent' as topic name
+         //<span class="java&#45;keyword">do</span> something with user
+  &#125;
+&#125;</pre></div><p class="paragraph"/>Event methods are always single-argument, and the value is the object sent with the event. Usually this is the "subject" of the event.<p class="paragraph"/><h3>Defining listeners at run time</h3><p class="paragraph"/>
+
 
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../guide/security.html">&lt;&lt; <strong>5</strong><span>Security API</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/security.html">&lt;&lt; <strong>4</strong><span>Security API</span></a></div>
                 
-                    <div class="toc-item next-right"><a href="../guide/injection.html"><strong>7</strong><span>Injection API</span> >></a></div>
+                    <div class="toc-item next-right"><a href="../guide/injection.html"><strong>6</strong><span>Injection API</span> >></a></div>
                 
                 <div style="clear:both"></div>
             </div>
@@ -146,10 +407,70 @@ Pending
                             </div>
                     </div>
                     
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">DSL Reference</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/DSL%20Reference/events.html">events</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Events Methods</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Events%20Methods/countListeners.html">countListeners</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Events%20Methods/event.html">event</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Events%20Methods/eventAsync.html">eventAsync</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Events%20Methods/on.html">on</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Events%20Methods/removeListener.html">removeListener</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Events%20Methods/removeListeners.html">removeListeners</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Events%20Methods/waitFor.html">waitFor</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Global Properties</h1><div class="menu-sub">
                         
                             
                             <div class="menu-item"><a href="../ref/Global%20Properties/pluginConfig.html">pluginConfig</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Navigation Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Navigation%20Tags/breadcrumb.html">breadcrumb</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Navigation%20Tags/menu.html">menu</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Navigation%20Tags/primary.html">primary</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Navigation%20Tags/secondary.html">secondary</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Navigation%20Tags/set.html">set</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Navigation%20Tags/title.html">title</a>
                             </div>
                             
                             </div>
@@ -206,43 +527,43 @@ Pending
                             </div>
                     </div>
                     
-                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags Security</h1><div class="menu-sub">
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Security Tags</h1><div class="menu-sub">
                         
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/createLoginLink.html">createLoginLink</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/createLoginLink.html">createLoginLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/createLogoutLink.html">createLogoutLink</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/createLogoutLink.html">createLogoutLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/createSignupLink.html">createSignupLink</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/createSignupLink.html">createSignupLink</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/identity.html">identity</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/identity.html">identity</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/ifLoggedIn.html">ifLoggedIn</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/ifLoggedIn.html">ifLoggedIn</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/ifNotLoggedIn.html">ifNotLoggedIn</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/ifNotLoggedIn.html">ifNotLoggedIn</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/ifNotPermitted.html">ifNotPermitted</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/ifNotPermitted.html">ifNotPermitted</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/ifPermitted.html">ifPermitted</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/ifPermitted.html">ifPermitted</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/info.html">info</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/info.html">info</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/loginButton.html">loginButton</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/loginButton.html">loginButton</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/logoutButton.html">logoutButton</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/logoutButton.html">logoutButton</a>
                             </div>
                             
-                            <div class="menu-item"><a href="../ref/Tags%20Security/signupButton.html">signupButton</a>
+                            <div class="menu-item"><a href="../ref/Security%20Tags/signupButton.html">signupButton</a>
                             </div>
                             
                             </div>
@@ -260,48 +581,6 @@ Pending
                             </div>
                     </div>
                     
-                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Tags Ui Extension</h1><div class="menu-sub">
-                        
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/button.html">button</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/callTag.html">callTag</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/displayMessage.html">displayMessage</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/dummyText.html">dummyText</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/joinClasses.html">joinClasses</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/label.html">label</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/organization.html">organization</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/siteLink.html">siteLink</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/siteName.html">siteName</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/siteURL.html">siteURL</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/smartLink.html">smartLink</a>
-                            </div>
-                            
-                            <div class="menu-item"><a href="../ref/Tags%20Ui%20Extension/year.html">year</a>
-                            </div>
-                            
-                            </div>
-                    </div>
-                    
                     <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extension Methods</h1><div class="menu-sub">
                         
                             
@@ -309,6 +588,51 @@ Pending
                             </div>
                             
                             <div class="menu-item"><a href="../ref/Ui%20Extension%20Methods/displayMessage.html">displayMessage</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Ui Extenstion Tags</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/attrIfSet.html">attrIfSet</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/button.html">button</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/callTag.html">callTag</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/displayMessage.html">displayMessage</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/dummyText.html">dummyText</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/joinClasses.html">joinClasses</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/label.html">label</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/organization.html">organization</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/siteLink.html">siteLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/siteName.html">siteName</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/siteURL.html">siteURL</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/smartLink.html">smartLink</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Ui%20Extenstion%20Tags/year.html">year</a>
                             </div>
                             
                             </div>
